@@ -6,6 +6,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import Theme from "./theme"; // imported theme for mui
 import Navbar from "../components/navbar"; // navbar component // parallax provider
 // import metadata from "@/utils/metadata"; //metadata for the website
+import {SessionProvider} from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,9 @@ export default function RootLayout({ children }) {
                 zIndex: 1000,
               }}
             />
-            {children}
+            <SessionProvider>
+              {children}
+            </SessionProvider>
           </Theme>
         </AppRouterCacheProvider>
       </body>

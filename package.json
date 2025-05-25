@@ -21,6 +21,8 @@
     "@react-three/drei": "^10.0.7",
     "@react-three/fiber": "^9.1.2",
     "alias": "^0.0.5",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.5.0",
     "framer-motion": "^12.12.1",
     "gsap": "^3.13.0",

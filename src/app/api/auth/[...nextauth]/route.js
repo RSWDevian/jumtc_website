@@ -1,6 +1,7 @@
+//? This file stores the configuration of NextAuth for authentication using credentials (email and password)
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import pool from "../../../../lib/db";
+import { signIn } from "next-auth/react";
 
 export const authOptions = {
   providers: [
@@ -11,44 +12,39 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log("Running authorization...");
         const { email, password } = credentials;
-        try {
-          const result = await pool.query(
-            "select * from members where email = $1",
-            [email]
-          );
 
-          const user = result.rows[0];
-          if (!user) return null;
-
-          if (user.password !== password) return null;
-
+        // Example: Simple hardcoded credentials check
+        if (email === "admin@example.com" && password === "1234") {
+          console.log("Authorization successful");
           return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
+            email: email,
+            role: "admin", // Example role
           };
-        } catch (err) {
-          console.log(err);
-          return null;
         }
+
+        console.log("Authorization failed: Invalid credentials");
+        return null; // Return null if credentials are invalid
       },
     }),
   ],
   callbacks: {
-    async session({session, token}){
-        session.user.id = token.id;
-        session.user.name = token.name;
-        return session;
+    async session({ session, token }) {
+      session.user.id = token.id;
+      session.user.name = token.name;
+      return session;
     },
-    async jwt({token, user}) {
-        if(user) {
-            token.id = user.id;
-            token.name = user.name;
-        }
-        return token;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+      }
+      return token;
     },
+    async redirect({ url, baseUrl }) {
+        return "/jumtc-core-access";
+    }
   },
   session: {
     strategy: "jwt",
